@@ -54,7 +54,7 @@ def main():
         # === 3. Configuración del Entrenamiento (TrainingArguments) ===
         # Aquí definimos los hiperparámetros de aprendizaje
         training_args = TrainingArguments(
-            output_dir="./resultados_modelo",
+            output_dir="./02_finetuning_transformers/resultados_modelo",
             eval_strategy="epoch",       # Evaluar al final de cada época
             learning_rate=2e-5,
             per_device_train_batch_size=8,
@@ -82,13 +82,8 @@ def main():
 
         # === 5. Guardado del modelo fine-tuneado ===
         print("\\n-> Guardando el modelo adaptado en local...")
-        trainer.save_model("./mi_modelo_finetuneado")
-        print("[Éxito] Fine-Tuning completado y modelo guardado en './mi_modelo_finetuneado'")
-        '''
-
-        print("\n[INFO] El código de fine-tuning real está dentro de un bloque comentado.")
-        print("       Quita las triples comillas (''') para probar a entrenar un modelo con datos.")
-        print("       (El algoritmo de ejemplo coge solo 100 reseñas de IMDb para que corra rápido sin GPU).")
+        trainer.save_model("./02_finetuning_transformers/mi_modelo_finetuneado")
+        print("[Éxito] Fine-Tuning completado y modelo guardado en './02_finetuning_transformers/mi_modelo_finetuneado'")
 
     except ImportError as e:
         print(f"[ERROR] Faltan dependencias para ejecutar el entorno de Fine-Tuning: {e}")

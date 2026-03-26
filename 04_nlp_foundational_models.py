@@ -10,20 +10,20 @@ def main():
         logging.getLogger("transformers").setLevel(logging.ERROR)
         
         print("-> 1. Cargando pipeline de Análisis de Sentimiento (Sentiment-Analysis)...")
-        sentiment = pipeline("sentiment-analysis")
+        sentiment = pipeline("sentiment-analysis", device=-1)
         # El modelo analiza si la frase es POSITIVE o NEGATIVE y da su grado de confianza (Score)
         print("Resultado Sentimiento:", sentiment("Me siento extremadamente satisfecho con esta aplicación!"))
         
         print("\n-> 2. Cargando pipeline de Reconocimiento de Entidades Nombradas (NER)...")
         # Identifica Organizaciones, Lugares, Personas... Agrupándolas (grouped_entities=True)
-        ner = pipeline("ner", aggregation_strategy="simple")
+        ner = pipeline("ner", aggregation_strategy="simple", device=-1)
         print("Extracción NER:")
         for entidad in ner("Rubén fundó Microsoft Enterprise en Barcelona durante 1999."):
              print(f" - [{entidad['entity_group']}] detectado: {entidad['word']} (Certeza: {entidad['score']:.2f})")
         
         print("\n-> 3. Cargando pipeline Zero-Shot Classification...")
         # Capacidad de los LM Modernos: categorizar un texto SIN haber sido entrenado para esas categorías
-        zero_shot = pipeline("zero-shot-classification")
+        zero_shot = pipeline("zero-shot-classification", device=-1)
         texto = "El nuevo cohete reutilizable logró aterrizar en la plataforma marítima reduciendo costes un 30%."
         etiquetas = ["cocina", "astronomía/ciencia", "deportes", "economía"]
         

@@ -17,14 +17,15 @@ def main():
         logging.getLogger("sentence_transformers").setLevel(logging.ERROR)
         
         print("-> Fase 0. Fabricando documento secreto de la empresa (Base de Datos Viva)...")
-        with open("conocimiento_rag.txt", "w", encoding="utf-8") as f:
+        os.makedirs("07_rag_langchain", exist_ok=True)
+        with open("07_rag_langchain/conocimiento_rag.txt", "w", encoding="utf-8") as f:
             f.write("ProjectZero es un sistema clasificado desarrollado en 2026. Sus fundadores son Rubén y su IA. "
                     "El objetivo del proyecto es colonizar el mercado tecnológico mediante automatización generativa.\n"
                     "El presupuesto corporativo fue de 3 billones de créditos marcianos y durará 2 años.")
 
         print("-> Fase 1. ETL: Ingesta del Documento y Fragmentación (Chunking)...")
         # El Chunking evita pasar el límite de Tokens del modelo LLM. 
-        loader = TextLoader("conocimiento_rag.txt", encoding="utf-8")
+        loader = TextLoader("07_rag_langchain/conocimiento_rag.txt", encoding="utf-8")
         documents = loader.load()
         text_splitter = CharacterTextSplitter(separator=".", chunk_size=200, chunk_overlap=20)
         docs = text_splitter.split_documents(documents)
@@ -56,7 +57,7 @@ def main():
         print("\n=== RESPUESTA SISTEMA RAG INTEGRADOR ===")
         print(respuesta["result"])
         
-        os.remove("conocimiento_rag.txt") # Limpiamos el rastro
+        os.remove("07_rag_langchain/conocimiento_rag.txt") # Limpiamos el rastro
         
     except ImportError as e:
          print(f"[ERROR] Te faltan engranajes: {e}")

@@ -20,8 +20,8 @@ def main():
         from langchain_community.llms import HuggingFacePipeline
         from langchain_core.prompts import PromptTemplate
         # Novedad: Importamos módulos para retención de memoria
-        from langchain.memory import ConversationBufferMemory
-        from langchain.chains import LLMChain
+        from langchain_classic.memory import ConversationBufferMemory
+        from langchain_classic.chains import LLMChain
 
         print("[OK] Dependencias correctamente encontradas.")
 
@@ -49,11 +49,11 @@ def main():
 
         # Definimos el Prompt incluyendo explícitamente la variable de memoria
         template = (
-            "Eres un asistente de IA muy útil y conversacional.\n\n"
-            "Historial de la conversación previa:\n"
+            "You are a helpful and conversational AI assistant.\n\n"
+            "Previous conversation history:\n"
             "{historial_chat}\n\n"
-            "Usuario: {pregunta}\n"
-            "Asistente:"
+            "User: {pregunta}\n"
+            "Assistant:"
         )
         prompt = PromptTemplate(template=template, input_variables=["historial_chat", "pregunta"])
 
@@ -67,8 +67,8 @@ def main():
 
         # === 3. Inferencia Evolutiva (Charla con Contexto) ===
         preguntas = [
-            "Hola, mi nombre es Rubén y estoy aprendiendo a programar sistemas RAG.",
-            "Qué bien. Oye, ¿recuerdas cómo me llamo y qué estoy estudiando?"
+            "Hello, my name is Ruben and I am learning to program RAG systems.",
+            "That's great. Hey, do you remember what my name is and what I am studying?"
         ]
 
         print("\n=== INICIO DE CONVERSACIÓN CON MEMORIA ===")
