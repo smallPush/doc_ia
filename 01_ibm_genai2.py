@@ -3,7 +3,7 @@ from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain.tools.retriever import create_retriever_tool
+from langchain_core.tools.retriever import create_retriever_tool
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import HumanMessage
@@ -54,7 +54,7 @@ agent = create_react_agent(
     model=llm,
     tools=tools,
     checkpointer=memory,               # ← memoria persistente
-    state_modifier=system_prompt       # prompt del sistema
+    prompt=system_prompt
 )
 
 # ========================= 5. FUNCIÓN PARA CHATEAR =========================
