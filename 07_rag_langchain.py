@@ -6,10 +6,10 @@ def main():
     print("--- 7. RAG (Retrieval-Augmented Generation) con LangChain ---")
     try:
         from langchain_community.document_loaders import TextLoader
-        from langchain.text_splitter import CharacterTextSplitter
+        from langchain_text_splitters import CharacterTextSplitter
         from langchain_community.vectorstores import FAISS
         from langchain_community.embeddings import HuggingFaceEmbeddings
-        from langchain.chains import RetrievalQA
+        from langchain_classic.chains import RetrievalQA
         from langchain_community.llms import HuggingFacePipeline
         from transformers import pipeline
         import os
@@ -37,8 +37,8 @@ def main():
         vectorstore = FAISS.from_documents(docs, embeddings)
         
         print("-> Fase 3. Instanciador del Cerebro Central (LLM)...")
-        # FLAN-T5 es experto en resumir y buscar información puntual
-        pipe = pipeline("text2text-generation", model="google/flan-t5-large", max_length=100)
+        # GPT2 es un modelo de generación de texto probado y compatible
+        pipe = pipeline("text-generation", model="gpt2", max_new_tokens=100, device=-1)
         llm = HuggingFacePipeline(pipeline=pipe)
         
         print("-> Fase 4. Orquestación RAG (Retriever + LLM)...")

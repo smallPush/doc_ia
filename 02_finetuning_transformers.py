@@ -1,17 +1,17 @@
 """
-Tema 2: Generative AI Engineering and Fine-Tuning Transformers
+Topic 2: Generative AI Engineering and Fine-Tuning Transformers
 
-Concepto:
-Demostrar el proceso completo de Fine-Tuning de un modelo pre-entrenado
-de Hugging Face para adaptarlo a una tarea específica (ej: Clasificación de texto)
-utilizando la abstracción `Trainer` y la librería `datasets`.
+Concept:
+Demonstrate the complete Fine-Tuning process of a pre-trained
+Hugging Face model to adapt it to a specific task (e.g., Text Classification)
+using the `Trainer` abstraction and the `datasets` library.
 """
 
 import sys
 
 def main():
     print("--- 2. Generative AI Engineering and Fine-Tuning Transformers ---")
-    print("Ejemplo: Fine-tuning de DistilBERT para Análisis de Sentimientos.\n")
+    print("Example: Fine-tuning DistilBERT for Sentiment Analysis.\n")
 
     try:
         # Importamos las dependencias necesarias
@@ -24,47 +24,47 @@ def main():
         )
         import datasets
 
-        print("[OK] Las librerías transformers, torch y datasets están instaladas.")
+        print("[OK] The transformers, torch, and datasets libraries are installed.")
 
-        # === 1. Definición del Modelo y Tokenizador ===
+        # === 1. Model and Tokenizer Definition ===
         model_name = "distilbert-base-uncased"
-        print(f"-> Preparando modelo base: {model_name}")
+        print(f"-> Preparing base model: {model_name}")
 
-        print("-> Descargando pesos del modelo y tokenizador...")
+        print("-> Downloading model weights and tokenizer...")
         tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-        # Cargamos el modelo indicando que tendrá 2 etiquetas de salida (Positivo/Negativo)
+        # Load the model indicating it will have 2 output labels (Positive/Negative)
         model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
 
-        # === 2. Preparación del Dataset ===
-        print("-> Descargando y tokenizando el dataset (IMDb)...")
-        # Usamos un dataset pequeñísimo (100 ejemplos) para demostración; así corre rápido en CPU.
+        # === 2. Dataset Preparation ===
+        print("-> Downloading and tokenizing the dataset (IMDb)...")
+        # We use a very small dataset (100 examples) for demonstration; this way it runs fast on CPU.
         dataset = datasets.load_dataset("imdb", split="train[:100]")
 
-        # Función para transformar el texto en tokens numéricos del modelo
+        # Function to transform text into numerical model tokens
         def tokenize_function(examples):
             return tokenizer(examples["text"], padding="max_length", truncation=True, max_length=128)
 
         tokenized_datasets = dataset.map(tokenize_function, batched=True)
 
-        # Dividimos en set de entrenamiento (80) y validación (20)
+        # Split into training set (80) and validation set (20)
         small_train_dataset = tokenized_datasets.select(range(80))
         small_eval_dataset = tokenized_datasets.select(range(80, 100))
 
-        # === 3. Configuración del Entrenamiento (TrainingArguments) ===
-        # Aquí definimos los hiperparámetros de aprendizaje
+        # === 3. Training Configuration (TrainingArguments) ===
+        # Here we define the learning hyperparameters
         training_args = TrainingArguments(
-            output_dir="./02_finetuning_transformers/resultados_modelo",
-            eval_strategy="epoch",       # Evaluar al final de cada época
+            output_dir="./02_finetuning_transformers/model_results",
+            eval_strategy="epoch",       # Evaluate at the end of each epoch
             learning_rate=2e-5,
             per_device_train_batch_size=8,
             per_device_eval_batch_size=8,
-            num_train_epochs=1,          # Solo 1 época para la demostración
+            num_train_epochs=1,          # Only 1 epoch for demonstration
             weight_decay=0.01,
-            push_to_hub=False,           # No subir a HuggingFace Hub
+            push_to_hub=False,           # Do not upload to HuggingFace Hub
         )
 
-        # === 4. Bucle de Fine-Tuning usando Trainer ===
+        # === 4. Fine-Tuning Loop using Trainer ===
         trainer = Trainer(
             model=model,
             args=training_args,
@@ -72,22 +72,22 @@ def main():
             eval_dataset=small_eval_dataset,
         )
 
-        print("\n=== INICIANDO FINE-TUNING ===")
-        print("Entrenando el modelo en el dataset adaptado (puede tardar un minuto)...")
+        print("\n=== STARTING FINE-TUNING ===")
+        print("Training the model on the adapted dataset (may take a minute)...")
         trainer.train()
 
-        print("\\n=== EVALUACIÓN ===")
+        print("\\n=== EVALUATION ===")
         results = trainer.evaluate()
-        print(f"Resultados métricos: {results}")
+        print(f"Metric results: {results}")
 
-        # === 5. Guardado del modelo fine-tuneado ===
-        print("\\n-> Guardando el modelo adaptado en local...")
-        trainer.save_model("./02_finetuning_transformers/mi_modelo_finetuneado")
-        print("[Éxito] Fine-Tuning completado y modelo guardado en './02_finetuning_transformers/mi_modelo_finetuneado'")
+        # === 5. Saving the fine-tuned model ===
+        print("\\n-> Saving the adapted model locally...")
+        trainer.save_model("./02_finetuning_transformers/my_finetuned_model")
+        print("[Success] Fine-Tuning completed and model saved in './02_finetuning_transformers/my_finetuned_model'")
 
     except ImportError as e:
-        print(f"[ERROR] Faltan dependencias para ejecutar el entorno de Fine-Tuning: {e}")
-        print("Asegúrate de ejecutar en terminal: pip install torch transformers datasets accelerate")
+        print(f"[ERROR] Missing dependencies to run the Fine-Tuning environment: {e}")
+        print("Make sure to run in terminal: pip install torch transformers datasets accelerate")
 
 if __name__ == "__main__":
     main()

@@ -6,14 +6,14 @@ siguiendo un marco mental de Razonamiento ReAct (Reason/Act).
 def main():
     print("--- 8. AI Agents (Razonamiento Lógico y Herramientas con LangChain) ---")
     try:
-        from langchain.agents import initialize_agent, AgentType, Tool
+        from langchain_classic.agents import initialize_agent, AgentType, Tool
         from langchain_community.llms import HuggingFacePipeline
         from transformers import pipeline
         import numexpr as ne # Evaluador matemático C++ (muy seguro)
         
         print("-> Inicializando el 'Cerebro Central' (LLM de Instrucciones)...")
         # google/flan-t5-large tiene capacidades sólidas de ZeroShot Instruct 
-        pipe = pipeline("text2text-generation", model="google/flan-t5-large", max_new_tokens=40)
+        pipe = pipeline("text-generation", model="gpt2", max_new_tokens=100, device=-1)
         llm = HuggingFacePipeline(pipeline=pipe)
         
         print("-> Fraguando las Herramientas Externas (Tools)...")
